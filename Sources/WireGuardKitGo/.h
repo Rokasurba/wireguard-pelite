@@ -21,7 +21,7 @@ extern const char *_GoStringPtr(_GoString_ s);
 /* Start of preamble from import "C" comments.  */
 
 
-#line 8 "api-apple.go"
+#line 3 "api-apple.go"
  #include <stdlib.h>
  #include <sys/types.h>
  static void callLogger(void *func, void *ctx, int level, const char *msg)
@@ -91,14 +91,14 @@ typedef struct { void *data; GoInt len; GoInt cap; } GoSlice;
 extern "C" {
 #endif
 
-extern void wgSetLogger(GoUintptr context, GoUintptr loggerFn);
-extern GoInt32 wgTurnOn(char* settings, GoInt32 tunFd);
-extern void wgTurnOff(GoInt32 tunnelHandle);
-extern GoInt64 wgSetConfig(GoInt32 tunnelHandle, char* settings);
-extern char* wgGetConfig(GoInt32 tunnelHandle);
-extern void wgBumpSockets(GoInt32 tunnelHandle);
-extern void wgDisableSomeRoamingForBrokenMobileSemantics(GoInt32 tunnelHandle);
-extern char* wgVersion(void);
+extern void pltSetLogger(GoUintptr context, GoUintptr loggerFn);
+extern GoInt32 pltCoreStart(char* settings, GoInt32 tunFd);
+extern void pltCoreStop(GoInt32 tunnelHandle);
+extern GoInt64 pltApplyConfig(GoInt32 tunnelHandle, char* settings);
+extern char* pltReadConfig(GoInt32 tunnelHandle);
+extern void pltRefreshSockets(GoInt32 tunnelHandle);
+extern void pltFixMobileRouting(GoInt32 tunnelHandle);
+extern char* pltCoreVersion(void);
 
 #ifdef __cplusplus
 }

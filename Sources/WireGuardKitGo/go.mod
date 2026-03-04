@@ -1,4 +1,4 @@
-module golang.zx2c4.com/wireguard/apple
+module github.com/Rokasurba/wireguard-pelite
 
 go 1.17
 
