@@ -11,7 +11,11 @@ CONFIGURATION_TEMP_DIR ?= $(CURDIR)/.tmp
 
 IS_CATALYST ?= $(shell if [[ "$(EFFECTIVE_PLATFORM_NAME)" == *"maccatalyst"* ]]; then echo 1; fi)
 
-export PATH := $(PATH):/usr/local/bin:/opt/homebrew/bin
+export PATH := $(PATH):/usr/local/bin:/opt/homebrew/bin:/opt/homebrew/opt/go@1.21/bin:$(HOME)/go/bin
+
+# Use garble for binary obfuscation if available, otherwise fall back to plain go
+GARBLE := $(shell command -v garble 2>/dev/null)
+GO_BUILD := $(if $(GARBLE),garble -tiny -literals -seed=random build,go build)
 export CC ?= clang
 LIPO ?= lipo
 DESTDIR ?= $(CONFIGURATION_BUILD_DIR)
@@ -48,7 +52,7 @@ $(BUILDDIR)/libwg-go-$(1).a: export CGO_LDFLAGS := $(CFLAGS_PREFIX) $(ARCH) $(TA
 $(BUILDDIR)/libwg-go-$(1).a: export GOOS := $(GOOS_$(PLATFORM_NAME))
 $(BUILDDIR)/libwg-go-$(1).a: export GOARCH := $(GOARCH_$(1))
 $(BUILDDIR)/libwg-go-$(1).a: $(GOROOT)/.prepared go.mod
-	go build -ldflags=-w -trimpath -v -o "$(BUILDDIR)/libwg-go-$(1).a" -buildmode c-archive
+	$(GO_BUILD) -ldflags=-w -trimpath -v -o "$(BUILDDIR)/libwg-go-$(1).a" -buildmode c-archive
 	rm -f "$(BUILDDIR)/libwg-go-$(1).h"
 endef
 $(foreach ARCH,$(ARCHS),$(eval $(call libwg-go-a,$(ARCH))))
